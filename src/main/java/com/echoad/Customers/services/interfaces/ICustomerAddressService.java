@@ -12,9 +12,9 @@ public interface ICustomerAddressService {
 
     CustomerAddressDto getCustomerAddressById(Long id);
 
-    boolean createCustomerAddress(Long idCustomer,CustomerAddressDto customerAddress) ;
+    CustomerAddressDto createCustomerAddress(Long idCustomer,CustomerAddressDto customerAddress) ;
 
-    boolean updateCustomerAddress(CustomerAddressDto customerAddress);
+    CustomerAddressDto updateCustomerAddress(CustomerAddressDto customerAddress);
 
     boolean deleteCustomerAddress(Long id);
 

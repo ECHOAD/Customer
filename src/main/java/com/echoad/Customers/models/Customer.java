@@ -1,13 +1,14 @@
 package com.echoad.Customers.models;
 
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.List;
 
-import static org.hibernate.annotations.OnDeleteAction.CASCADE;
 
 /*This class is representing a customer model on a database*/
 @Entity
@@ -18,20 +19,20 @@ public class Customer implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @Column(name ="id_card_number", nullable = false)
+
+    @Column(name = "id_card_number", nullable = false)
     private String idCardNumber;
 
-    @Column(name ="first_name", nullable = false)
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @Column(name ="last_name", nullable = false)
+    @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(name ="is_deleted", nullable = false, columnDefinition = "Number default 0")
+    @Column(name = "is_deleted", nullable = false, columnDefinition = "Number default 0")
     private int isDeleted;
 
-    @OneToMany(cascade = CascadeType.ALL , mappedBy = "customer", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CustomerAddress> addresses;
 
     public Customer() {

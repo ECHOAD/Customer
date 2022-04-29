@@ -9,6 +9,7 @@ import com.echoad.Customers.services.CustomersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -46,7 +47,7 @@ public class CustomerController {
 
     @PostMapping("/")
     public ResponseEntity<?> createCustomer(@RequestBody CustomerDto customerDto) {
-        var responseObject = new ResponseObject<Boolean>();
+        var responseObject = new ResponseObject<CustomerDto>();
         try {
 
             responseObject.setData(customersService.createCustomer(customerDto));
@@ -55,12 +56,12 @@ public class CustomerController {
             return new ResponseEntity<>(responseObject, null, 201);
         } catch (ServiceException e) {
             responseObject.setMessage(e.getMessage());
-            responseObject.setData(false);
+            responseObject.setData(null);
             return new ResponseEntity<>(responseObject, null, 400);
         } catch (Exception e) {
 
             responseObject.setMessage("Customer creation failed");
-            responseObject.setData(false);
+            responseObject.setData(null);
 
             return new ResponseEntity<>(responseObject, null, 500);
         }
@@ -90,14 +91,13 @@ public class CustomerController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCustomer(@PathVariable("id") Long id, @RequestBody CustomerDto customerDto) {
-        var responseObject = new ResponseObject<Boolean>();
+        var responseObject = new ResponseObject<CustomerDto>();
 
         if (!customerDto.getId().equals(id)) {
             responseObject.setMessage("Customer id mismatch");
             responseObject.setData(null);
             return new ResponseEntity<>(responseObject, null, 400);
         }
-
 
         try {
             responseObject.setMessage("Customer updated successfully");
@@ -160,15 +160,14 @@ public class CustomerController {
 
     @PostMapping("/{idCustomer}/address")
     public ResponseEntity<?> createCustomerAddress(@PathVariable("idCustomer") Optional<Long> idCustomer, @RequestBody CustomerAddressDto customerAddressDto) {
-        var responseObject = new ResponseObject<Boolean>();
+        var responseObject = new ResponseObject<CustomerAddressDto>();
 
         if (idCustomer.isEmpty()) {
             responseObject.setMessage("Customer id is required");
-            responseObject.setData(false);
+            responseObject.setData(null);
             return new ResponseEntity<>(responseObject, null, 400);
 
         }
-
 
         try {
 
@@ -178,13 +177,13 @@ public class CustomerController {
             return new ResponseEntity<>(responseObject, null, 201);
         } catch (ServiceException e) {
             responseObject.setMessage(e.getMessage());
-            responseObject.setData(false);
+            responseObject.setData(null);
 
             return new ResponseEntity<>(responseObject, null, 400);
         } catch (Exception e) {
 
             responseObject.setMessage("Customer address creation failed");
-            responseObject.setData(false);
+            responseObject.setData(null);
 
             return new ResponseEntity<>(responseObject, null, 500);
         }
@@ -194,18 +193,18 @@ public class CustomerController {
     public ResponseEntity<?> updateCustomerAddress(@PathVariable("addressId") Optional<Long> addressId,
                                                    @RequestBody CustomerAddressDto customerAddressDto) {
 
-        var responseObject = new ResponseObject<Boolean>();
+        var responseObject = new ResponseObject<CustomerAddressDto>();
 
-        if(addressId.isEmpty() || customerAddressDto.getId() == null) {
+        if (addressId.isEmpty() || customerAddressDto.getId() == null) {
             responseObject.setMessage("Customer address update failed, address id is empty");
-            responseObject.setData(false);
+            responseObject.setData(null);
             return new ResponseEntity<>(responseObject, null, 400);
         }
 
 
-        if(!customerAddressDto.getId().equals(addressId.get())) {
+        if (!customerAddressDto.getId().equals(addressId.get())) {
             responseObject.setMessage("Customer address update failed, address id is not equal");
-            responseObject.setData(false);
+            responseObject.setData(null);
             return new ResponseEntity<>(responseObject, null, 400);
         }
 
@@ -217,18 +216,17 @@ public class CustomerController {
             return new ResponseEntity<>(responseObject, null, 200);
         } catch (ServiceException e) {
             responseObject.setMessage(e.getMessage());
-            responseObject.setData(false);
+            responseObject.setData(null);
 
             return new ResponseEntity<>(responseObject, null, 400);
         } catch (Exception e) {
 
             responseObject.setMessage("Customer address update failed");
-            responseObject.setData(false);
+            responseObject.setData(null);
 
             return new ResponseEntity<>(responseObject, null, 500);
         }
     }
-
 
 
     @DeleteMapping("/address/{addressId}")

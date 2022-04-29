@@ -13,9 +13,9 @@ public interface ICustomerService {
 
     CustomerDto getCustomerById(Long id);
 
-    boolean createCustomer(CustomerDto customer) ;
+    CustomerDto createCustomer(CustomerDto customer) ;
 
-    boolean updateCustomer(CustomerDto customer);
+    CustomerDto updateCustomer(CustomerDto customer);
 
     boolean deleteCustomer(Long id);
 

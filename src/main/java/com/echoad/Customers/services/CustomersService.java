@@ -67,7 +67,7 @@ public class CustomersService implements ICustomerService {
     }
 
 
-    public boolean createCustomer(CustomerDto customerDto) {
+    public CustomerDto createCustomer(CustomerDto customerDto) {
         try {
             if (customerRepository.findByIdCardNumber(customerDto.getIdCardNumber()).isPresent()) {
                 throw new InvalidArgumentException("The customer that you are trying to create already exists");
@@ -75,14 +75,16 @@ public class CustomersService implements ICustomerService {
 
             Customer customerToCreate = CustomerDtoMapper.deepMapCustomerDtoToCustomer(customerDto);
             customerRepository.save(customerToCreate);
-            return true;
+
+
+            return CustomerDtoMapper.deepMapCustomerToCustomerDto(customerToCreate);
         } catch (Exception e) {
             logger.error("Error creating customer", e);
             throw new RuntimeException("Error creating customer");
         }
     }
 
-    public boolean updateCustomer(CustomerDto customerDto) {
+    public CustomerDto updateCustomer(CustomerDto customerDto) {
         try {
 
             Optional<Customer> customerToUpdateFromDb = customerRepository.findById(customerDto.getId());
@@ -91,11 +93,16 @@ public class CustomersService implements ICustomerService {
                 throw new InvalidArgumentException("The customer that you are trying to update does not exist");
             }
 
-            Customer customerToUpdate = CustomerDtoMapper.softMapCustomerDtoToCustomer(customerDto);
+            Customer customerToUpdate = CustomerDtoMapper.deepMapCustomerDtoToCustomer(customerDto);
 
-            if (customerDto.getIdCardNumber().equalsIgnoreCase(customerToUpdate.getIdCardNumber())) {
+            if (!customerDto.getIdCardNumber().equalsIgnoreCase(customerToUpdate.getIdCardNumber())) {
                 if (customerRepository.findByIdCardNumber(customerDto.getIdCardNumber()).isPresent()) {
-                    throw new ExistingRecordException("The customer that you are trying to update already exists");
+                    if (customerToUpdate.getIsDeleted() == 0) {
+                        throw new ExistingRecordException("The customer that you are trying to update already exists. Is deactivated");
+                    }
+
+                    throw new Exception("The customer that you are trying to update already exists");
+
                 }
             }
 
@@ -104,11 +111,11 @@ public class CustomersService implements ICustomerService {
             customerToUpdate.setLastName(customerDto.getLastName());
 
             customerRepository.save(customerToUpdate);
-            return true;
+            return CustomerDtoMapper.deepMapCustomerToCustomerDto(customerToUpdate);
 
         } catch (ServiceException e) {
             logger.error("Error updating customer: " + e.getMessage(), e);
-            throw new ServiceException("Error updating customer");
+            throw e;
         } catch (Exception e) {
             logger.error("Error updating customer", e);
             throw new RuntimeException("Error updating customer", e);

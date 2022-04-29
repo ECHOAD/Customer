@@ -1,6 +1,7 @@
 package com.echoad.Customers.services;
 
 import com.echoad.Customers.dtos.CustomerAddressDto;
+import com.echoad.Customers.dtos.mappers.CustomerAddressMapper;
 import com.echoad.Customers.exceptions.InvalidArgumentException;
 import com.echoad.Customers.exceptions.ServiceException;
 import com.echoad.Customers.models.Customer;
@@ -39,7 +40,7 @@ public class CustomersAddressService implements ICustomerAddressService {
     }
 
     @Override
-    public boolean createCustomerAddress(Long idCustomer, CustomerAddressDto customerAddressDto) {
+    public CustomerAddressDto createCustomerAddress(Long idCustomer, CustomerAddressDto customerAddressDto) {
         try {
             Optional<Customer> customerFromDb = customerRepository.findById(idCustomer);
             if (customerFromDb.isEmpty()) {
@@ -49,7 +50,7 @@ public class CustomersAddressService implements ICustomerAddressService {
             CustomerAddress customerAddressToCreate = new CustomerAddress(customerFromDb.get(), customerAddressDto.getAddress());
             customerAddressRepository.save(customerAddressToCreate);
 
-            return true;
+            return CustomerAddressMapper.softMapCustomerAddressToCustomerAddressDto(customerAddressToCreate);
 
         } catch (ServiceException e) {
             logger.error(e.getMessage(), e);
@@ -101,7 +102,7 @@ public class CustomersAddressService implements ICustomerAddressService {
     }
 
 
-    public boolean updateCustomerAddress(CustomerAddressDto customerAddress) {
+    public CustomerAddressDto updateCustomerAddress(CustomerAddressDto customerAddress) {
         try {
             Optional<CustomerAddress> addressFromDb = customerAddressRepository.findById(customerAddress.getId());
 
@@ -113,7 +114,7 @@ public class CustomersAddressService implements ICustomerAddressService {
             addressToUpdate.setAddress(customerAddress.getAddress());
             customerAddressRepository.save(addressToUpdate);
 
-            return true;
+            return CustomerAddressMapper.softMapCustomerAddressToCustomerAddressDto(addressToUpdate);
         } catch (Exception e) {
             logger.error("Error updating address", e);
             throw new ServiceException("Error updating customer", e);
