@@ -1,5 +1,6 @@
 package com.echoad.Customers;
 
+import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import org.jetbrains.annotations.NotNull;
@@ -39,12 +40,19 @@ public class CustomersApplication {
 
     // Application Info
     @Bean
+    public OpenAPI openApiConfig() {
+        return new OpenAPI()
+                .info(apiInfo());
+    }
+
+
     public Info apiInfo() {
         return new Info()
                 .title(env.getProperty("api.title"))
                 .description("This is a customer service")
                 .version(env.getProperty("api.version"))
-                .contact(new Contact().name("EchoAd").email("adrianeea.ae@gmail.com"));
+                .contact(new Contact().name("EchoAd").email("adrianeea.ae@gmail.com")
+                        .url("https://www.linkedin.com/in/adrian-estevez-b89b50b8/"));
     }
 
 
