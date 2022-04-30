@@ -1,0 +1,23 @@
+{
+
+  "properties": [
+    {
+      "name": "api.version",
+      "type": "java.lang.String",
+      "description": "The version of the API.",
+      "defaultValue": "1.0.0"
+    },
+    {
+      "name": "api.name",
+      "type": "java.lang.String",
+      "description": "Description for api.name.",
+      "defaultValue": "My API"
+    },
+    {
+      "name": "api.requestMappingBase",
+      "type": "java.lang.String",
+      "description": "The base path for the API.",
+      "defaultValue": "/api/v1/"
+    }
+  ]
+}

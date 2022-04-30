@@ -6,6 +6,8 @@ import com.echoad.Customers.dtos.ResponseObject;
 import com.echoad.Customers.exceptions.ServiceException;
 import com.echoad.Customers.services.CustomersAddressService;
 import com.echoad.Customers.services.CustomersService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +16,8 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("api/v1/customers/")
+@Tag(name = "Customer Controller", description = "Customer Address Controller")
+@RequestMapping("${api.requestMappingBase}customers/")
 public class CustomerController {
     private final CustomersService customersService;
     private final CustomersAddressService customersAddressService;
@@ -29,6 +32,10 @@ public class CustomerController {
 
 
     @GetMapping("/")
+    @Operation(
+            summary = "Fetch all customers",
+            description = "Fetch all customers"
+    )
     public ResponseEntity<?> fetchAllCustomers() {
         var responseObject = new ResponseObject<List<CustomerDto>>();
 
@@ -46,6 +53,10 @@ public class CustomerController {
     }
 
     @PostMapping("/")
+    @Operation(
+            summary = "Create a new customer",
+            description = "Create a new customer"
+    )
     public ResponseEntity<?> createCustomer(@RequestBody CustomerDto customerDto) {
         var responseObject = new ResponseObject<CustomerDto>();
         try {
@@ -68,6 +79,10 @@ public class CustomerController {
     }
 
     @GetMapping("/{id}")
+    @Operation(
+            summary = "Fetch a customer by id",
+            description = "Fetch a customer by id"
+    )
     public ResponseEntity<?> fetchCustomerById(@PathVariable("id") Long id) {
         var responseObject = new ResponseObject<CustomerDto>();
 
@@ -90,6 +105,10 @@ public class CustomerController {
 
 
     @PutMapping("/{id}")
+    @Operation(
+            summary = "Update a customer by id",
+            description = "Update a customer by id"
+    )
     public ResponseEntity<?> updateCustomer(@PathVariable("id") Long id, @RequestBody CustomerDto customerDto) {
         var responseObject = new ResponseObject<CustomerDto>();
 
@@ -117,6 +136,10 @@ public class CustomerController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(
+            summary = "Delete a customer by id",
+            description = "Delete a customer by id"
+    )
     public ResponseEntity<?> deleteCustomer(@PathVariable("id") Long id) {
         var responseObject = new ResponseObject<Boolean>();
 
@@ -138,6 +161,7 @@ public class CustomerController {
     }
 
     @GetMapping("/{id}/address")
+    @Operation(summary = "Fetch a customer's address by id", description = "Fetch a customer's address by id")
     public ResponseEntity<?> getAllCustomerAddress(@PathVariable("id") Long id) {
         var responseObject = new ResponseObject<List<CustomerAddressDto>>();
 
@@ -159,6 +183,10 @@ public class CustomerController {
     }
 
     @PostMapping("/{idCustomer}/address")
+    @Operation(
+            summary = "Create a customer's address",
+            description = "Create a customer's address"
+    )
     public ResponseEntity<?> createCustomerAddress(@PathVariable("idCustomer") Optional<Long> idCustomer, @RequestBody CustomerAddressDto customerAddressDto) {
         var responseObject = new ResponseObject<CustomerAddressDto>();
 
@@ -190,6 +218,10 @@ public class CustomerController {
     }
 
     @PutMapping("/address/{addressId}")
+    @Operation(
+            summary = "Update a customer's address",
+            description = "Update a customer's address"
+    )
     public ResponseEntity<?> updateCustomerAddress(@PathVariable("addressId") Optional<Long> addressId,
                                                    @RequestBody CustomerAddressDto customerAddressDto) {
 
@@ -230,6 +262,10 @@ public class CustomerController {
 
 
     @DeleteMapping("/address/{addressId}")
+    @Operation(
+            summary = "Delete a customer's address",
+            description = "Delete a customer's address"
+    )
     public ResponseEntity<?> deleteCustomerAddress(@PathVariable("addressId") Long addressId) {
         var responseObject = new ResponseObject<Boolean>();
 

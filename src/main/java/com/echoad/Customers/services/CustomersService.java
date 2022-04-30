@@ -69,7 +69,7 @@ public class CustomersService implements ICustomerService {
 
     public CustomerDto createCustomer(CustomerDto customerDto) {
         try {
-            if (customerRepository.findByIdCardNumber(customerDto.getIdCardNumber()).isPresent()) {
+            if (customerRepository.existsByIdCardNumber(customerDto.getIdCardNumber())) {
                 throw new InvalidArgumentException("The customer that you are trying to create already exists");
             }
 
