@@ -93,22 +93,20 @@ public class CustomersService implements ICustomerService {
                 throw new InvalidArgumentException("The customer that you are trying to update does not exist");
             }
 
-            Customer customerToUpdate = CustomerDtoMapper.deepMapCustomerDtoToCustomer(customerDto);
+            Customer customerToUpdate = customerToUpdateFromDb.get();
 
-            if (!customerDto.getIdCardNumber().equalsIgnoreCase(customerToUpdate.getIdCardNumber())) {
+            Customer customerFromRequest = CustomerDtoMapper.deepMapCustomerDtoToCustomer(customerDto);
+
+            if (!customerFromRequest.getIdCardNumber().equalsIgnoreCase(customerToUpdate.getIdCardNumber())) {
                 if (customerRepository.findByIdCardNumber(customerDto.getIdCardNumber()).isPresent()) {
-                    if (customerToUpdate.getIsDeleted() == 0) {
-                        throw new ExistingRecordException("The customer that you are trying to update already exists. Is deactivated");
-                    }
-
-                    throw new Exception("The customer that you are trying to update already exists");
+                    throw new ExistingRecordException("The customer that you are trying to update already exists or is deactivated");
 
                 }
             }
 
-            customerToUpdate.setIdCardNumber(customerDto.getIdCardNumber());
-            customerToUpdate.setFirstName(customerDto.getFirstName());
-            customerToUpdate.setLastName(customerDto.getLastName());
+            customerToUpdate.setIdCardNumber(customerFromRequest.getIdCardNumber());
+            customerToUpdate.setFirstName(customerFromRequest.getFirstName());
+            customerToUpdate.setLastName(customerFromRequest.getLastName());
 
             customerRepository.save(customerToUpdate);
             return CustomerDtoMapper.deepMapCustomerToCustomerDto(customerToUpdate);
